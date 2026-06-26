@@ -1,6 +1,7 @@
 import os
 import resend
 from dotenv import load_dotenv
+from app.core.config import settings
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ def send_reset_password_email(email_to: str, token: str):
         print(f"⚠️ Warning: RESEND_API_KEY not configured. Would have sent email to {email_to} with token {token}")
         return
 
-    reset_url = f"http://localhost:3000/reset-password?token={token}"
+    reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token}"
     
     html_content = f"""
     <!DOCTYPE html>
