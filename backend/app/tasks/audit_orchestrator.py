@@ -1,12 +1,10 @@
 import time
 from datetime import datetime
-from app.tasks.worker import celery_app
 from app.core.database import SessionLocal
 from app.models import Audit, Violation
 from app.tasks.parser_terraform import parse_terraform_violations
 from app.tasks.parser_kubernetes import parse_kubernetes_violations
 
-@celery_app.task(name="app.tasks.audit_orchestrator.run_audit_pipeline")
 def run_audit_pipeline(audit_id: str):
     db = SessionLocal()
     try:
