@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnerable-web-app
+  labels:
+    app: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      # VIOLATION: Missing securityContext.runAsNonRoot: true at the pod level
+      containers:
+      - name: main-app
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        # VIOLATION: Missing resources limits for CPU and Memory
+        securityContext:
+          # VIOLATION: explicitly running as root
+          runAsUser: 0
+          # VIOLATION: running as a privileged container
+          privileged: true
+          allowPrivilegeEscalation: true
+
+      - name: sidecar-logger
+        image: fluentd:v1.14
+        # VIOLATION: Missing resources limits
+        # Missing security context completely (Implicit run as root)

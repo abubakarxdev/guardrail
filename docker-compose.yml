@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: guardrail-db
+    environment:
+      POSTGRES_USER: guardrail_user
+      POSTGRES_PASSWORD: guardrail_password
+      POSTGRES_DB: guardrail_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guardrail_user -d guardrail_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: guardrail-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: guardrail-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://guardrail_user:guardrail_password@db:5432/guardrail_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=guardrail_super_secret_signing_key_change_me_in_production_13579
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+    volumes:
+      - ./backend:/code
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: guardrail-worker
+    command: celery -A app.tasks.worker.celery_app worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://guardrail_user:guardrail_password@db:5432/guardrail_db
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./backend:/code
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: guardrail-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
