@@ -36,13 +36,14 @@ export const api = {
     }
   },
 
-  async request(endpoint: string, options: RequestInit = {}) {
+  async request(endpoint: string, options: RequestInit & { skipAuthRedirect?: boolean } = {}) {
     const isMultipart = options.body instanceof FormData;
+    const { skipAuthRedirect, ...fetchOptions } = options;
     const config = {
-      ...options,
+      ...fetchOptions,
       headers: {
         ...getHeaders(isMultipart),
-        ...(options.headers || {}),
+        ...(fetchOptions.headers || {}),
       } as HeadersInit,
     };
 
@@ -63,7 +64,7 @@ export const api = {
       
       if (response.status === 401) {
         api.logout();
-        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+        if (!skipAuthRedirect && typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
           // Store error in sessionStorage so login page can show it
           sessionStorage.setItem("auth_error", "Your session has expired. Please log in again.");
           window.location.href = "/login";
@@ -109,7 +110,7 @@ export const api = {
   },
 
   async getMe() {
-    return this.request("/auth/me");
+    return this.request("/auth/me", { skipAuthRedirect: true });
   },
 
   // Audits endpoints
