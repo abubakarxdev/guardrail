@@ -213,7 +213,7 @@ export default function Dashboard() {
 
   if (pageLoading) {
     return (
-      <div className="flex h-screen items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div className="flex h-screen items-center justify-center bg-[#09090b]">
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-12 h-12">
             <svg className="animate-spin absolute inset-0" width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -221,7 +221,7 @@ export default function Dashboard() {
               <path d="M24 4a20 20 0 0120 20" stroke="#6366f1" strokeWidth="3" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="mono text-xs uppercase tracking-widest" style={{ color: '#334155' }}>Loading...</span>
+          <span className="mono text-xs uppercase tracking-widest text-text-muted">Loading...</span>
         </div>
       </div>
     );
@@ -231,23 +231,19 @@ export default function Dashboard() {
   const totalViolations = severityDist.critical + severityDist.high + severityDist.medium + severityDist.low;
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+    <div className="flex h-screen overflow-hidden bg-[#09090b]">
       <Sidebar userEmail={user?.email} activeSection="dashboard" />
 
       <div className="flex-1 overflow-y-auto">
         {/* Top header */}
-        <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between" style={{
-          background: 'rgba(2,4,8,0.85)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.04)',
-        }}>
+        <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between bg-[#09090b] border-b border-[#27272a]">
           <div>
-            <h1 className="text-lg font-bold" style={{ color: '#e2e8f0' }}>Compliance Dashboard</h1>
-            <p className="text-xs mt-0.5" style={{ color: '#334155' }}>Infrastructure as Code security posture analysis</p>
+            <h1 className="text-lg font-bold text-text-primary">Compliance Dashboard</h1>
+            <p className="text-xs mt-0.5 text-text-muted">Infrastructure as Code security posture analysis</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="nav-pill">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-glow" style={{ background: '#10b981' }}/>
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-emerald animate-pulse" />
               Engine Active
             </div>
           </div>
@@ -256,33 +252,33 @@ export default function Dashboard() {
         <div className="px-8 py-6 space-y-6">
           {/* Stats row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="stat-card purple">
-              <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#334155' }}>Total Audits</div>
-              <div className="text-3xl font-black mb-1" style={{ color: '#818cf8' }}>{stats?.total_audits ?? 0}</div>
-              <div className="text-xs" style={{ color: '#1e293b' }}>manifests scanned</div>
+            <div className="surface-card p-6">
+              <div className="text-xs font-semibold uppercase tracking-widest mb-3 text-text-muted">Total Audits</div>
+              <div className="text-3xl font-black mb-1 text-accent-purple">{stats?.total_audits ?? 0}</div>
+              <div className="text-xs text-text-secondary">manifests scanned</div>
             </div>
-            <div className="stat-card cyan">
-              <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#334155' }}>Avg Posture Score</div>
-              <div className="text-3xl font-black mb-1" style={{ color: '#22d3ee' }}>
+            <div className="surface-card p-6">
+              <div className="text-xs font-semibold uppercase tracking-widest mb-3 text-text-muted">Avg Posture Score</div>
+              <div className="text-3xl font-black mb-1 text-accent-cyan">
                 {stats?.average_score != null ? `${stats.average_score}%` : '—'}
               </div>
-              <div className="text-xs" style={{ color: '#1e293b' }}>compliance rate</div>
+              <div className="text-xs text-text-secondary">compliance rate</div>
             </div>
-            <div className="stat-card rose">
-              <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#334155' }}>Total Violations</div>
-              <div className="text-3xl font-black mb-1" style={{ color: '#fb7185' }}>{totalViolations}</div>
-              <div className="flex items-center gap-2 text-[10px] mono mt-1">
-                <span style={{ color: '#f43f5e' }}>{severityDist.critical}C</span>
-                <span style={{ color: '#fb923c' }}>{severityDist.high}H</span>
-                <span style={{ color: '#fbbf24' }}>{severityDist.medium}M</span>
-                <span style={{ color: '#818cf8' }}>{severityDist.low}L</span>
+            <div className="surface-card p-6">
+              <div className="text-xs font-semibold uppercase tracking-widest mb-3 text-text-muted">Total Violations</div>
+              <div className="text-3xl font-black mb-1 text-accent-rose">{totalViolations}</div>
+              <div className="flex items-center gap-2 text-[10px] mono mt-1 font-semibold">
+                <span className="text-accent-rose">{severityDist.critical}C</span>
+                <span className="text-orange-400">{severityDist.high}H</span>
+                <span className="text-accent-amber">{severityDist.medium}M</span>
+                <span className="text-accent-purple">{severityDist.low}L</span>
               </div>
             </div>
-            <div className="stat-card emerald">
-              <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#334155' }}>Frameworks</div>
+            <div className="surface-card p-6">
+              <div className="text-xs font-semibold uppercase tracking-widest mb-3 text-text-muted">Frameworks</div>
               <div className="flex gap-2 mt-2">
-                <div className="flex-1 py-2 rounded-lg text-center text-xs font-bold" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.15)', color: '#818cf8' }}>TF</div>
-                <div className="flex-1 py-2 rounded-lg text-center text-xs font-bold" style={{ background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.15)', color: '#22d3ee' }}>K8S</div>
+                <div className="flex-1 py-2 rounded-lg text-center text-xs font-bold bg-accent-purple/10 border border-accent-purple/20 text-accent-purple">TF</div>
+                <div className="flex-1 py-2 rounded-lg text-center text-xs font-bold bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan">K8S</div>
               </div>
             </div>
           </div>
@@ -292,24 +288,24 @@ export default function Dashboard() {
             {/* Left column */}
             <div className="col-span-12 lg:col-span-3 space-y-5">
               {/* Upload */}
-              <div className="glass-card rounded-2xl p-5">
+              <div className="surface-card p-5">
                 <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-sm font-bold" style={{ color: '#e2e8f0' }}>New Audit</h2>
+                  <h2 className="text-sm font-bold text-text-primary">New Audit</h2>
                 </div>
                 <FileUploadZone onUploadSuccess={handleUploadSuccess} />
               </div>
 
               {/* History */}
-              <div className="glass-card rounded-2xl p-5">
+              <div className="surface-card p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-sm font-bold" style={{ color: '#e2e8f0' }}>Audit History</h2>
-                  <span className="mono text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.04)', color: '#334155' }}>
+                  <h2 className="text-sm font-bold text-text-primary">Audit History</h2>
+                  <span className="mono text-[10px] px-1.5 py-0.5 rounded bg-[#27272a] text-text-muted">
                     {allAudits.length}
                   </span>
                 </div>
-                <div className="space-y-2 max-h-[420px] overflow-y-auto">
+                <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
                   {allAudits.length === 0 ? (
-                    <div className="py-8 text-center text-xs" style={{ color: '#1e293b' }}>No audits yet</div>
+                    <div className="py-8 text-center text-xs text-text-muted">No audits yet</div>
                   ) : (
                     allAudits.map((a) => {
                       const isSelected = selectedId === a.id;
@@ -318,34 +314,24 @@ export default function Dashboard() {
                       return (
                         <div
                           key={a.id}
-                          className="group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200"
-                          style={{
-                            background: isSelected ? 'rgba(99,102,241,0.08)' : 'rgba(255,255,255,0.02)',
-                            border: `1px solid ${isSelected ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.03)'}`,
-                          }}
+                          className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 border ${isSelected ? 'bg-accent-purple/10 border-accent-purple/30' : 'bg-[#18181b] border-[#27272a] hover:border-[#3f3f46]'}`}
                           onClick={() => setSelectedId(a.id)}
                         >
                           {/* file type indicator */}
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mono text-[9px] font-bold" style={{
-                            background: a.file_type === 'terraform' ? 'rgba(99,102,241,0.1)' : 'rgba(34,211,238,0.1)',
-                            border: `1px solid ${a.file_type === 'terraform' ? 'rgba(99,102,241,0.2)' : 'rgba(34,211,238,0.2)'}`,
-                            color: a.file_type === 'terraform' ? '#818cf8' : '#22d3ee',
-                          }}>
+                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mono text-[9px] font-bold border ${a.file_type === 'terraform' ? 'bg-accent-purple/10 border-accent-purple/20 text-accent-purple' : 'bg-accent-cyan/10 border-accent-cyan/20 text-accent-cyan'}`}>
                             {a.file_type === 'terraform' ? 'TF' : 'K8'}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold truncate" style={{ color: isSelected ? '#e2e8f0' : '#64748b' }}>
+                            <div className={`text-xs font-semibold truncate ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
                               {a.filename}
                             </div>
                             <div className="flex items-center gap-1.5 mt-0.5">
-                              <div className="status-dot" style={{ background: a.status === 'completed' ? '#10b981' : a.status === 'failed' ? '#f43f5e' : '#6366f1', width: 5, height: 5, animation: isLive ? 'pulse-glow 1.2s infinite' : 'none' }} />
-                              <span className="mono text-[9px] uppercase" style={{ color: '#1e293b' }}>{a.status}</span>
+                              <div className={`status-dot ${a.status} ${isLive ? 'animate-pulse' : ''}`} />
+                              <span className="mono text-[9px] uppercase text-text-muted">{a.status}</span>
                             </div>
                           </div>
                           {a.status === 'completed' && (
-                            <span className="mono text-xs font-black flex-shrink-0" style={{
-                              color: a.score >= 80 ? '#10b981' : a.score >= 60 ? '#f59e0b' : '#f43f5e',
-                            }}>
+                            <span className={`mono text-xs font-black flex-shrink-0 ${a.score >= 80 ? 'text-emerald-500' : a.score >= 60 ? 'text-amber-500' : 'text-rose-500'}`}>
                               {a.score}%
                             </span>
                           )}
@@ -354,15 +340,13 @@ export default function Dashboard() {
                             <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                               <button
                                 onClick={() => handleDelete(a.id)}
-                                className="px-1.5 py-0.5 rounded text-[9px] font-bold"
-                                style={{ background: 'rgba(244,63,94,0.15)', color: '#f43f5e', border: '1px solid rgba(244,63,94,0.3)' }}
+                                className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20"
                               >
                                 Yes
                               </button>
                               <button
                                 onClick={() => setConfirmDeleteId(null)}
-                                className="px-1.5 py-0.5 rounded text-[9px] font-bold"
-                                style={{ background: 'rgba(255,255,255,0.04)', color: '#475569', border: '1px solid rgba(255,255,255,0.06)' }}
+                                className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-zinc-800 text-text-secondary border border-zinc-700"
                               >
                                 No
                               </button>
@@ -389,19 +373,19 @@ export default function Dashboard() {
             {/* Right panel */}
             <div className="col-span-12 lg:col-span-9 space-y-5">
               {detailLoading ? (
-                <div className="flex items-center justify-center rounded-2xl" style={{ height: 400, background: 'rgba(8,15,26,0.5)', border: '1px solid rgba(255,255,255,0.04)' }}>
+                <div className="flex items-center justify-center rounded-2xl h-[400px] bg-[#18181b] border border-[#27272a]">
                   <div className="flex flex-col items-center gap-3">
                     <svg className="animate-spin" width="32" height="32" viewBox="0 0 32 32" fill="none">
                       <circle cx="16" cy="16" r="13" stroke="rgba(99,102,241,0.15)" strokeWidth="2.5"/>
                       <path d="M16 3a13 13 0 0113 13" stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round"/>
                     </svg>
-                    <span className="mono text-xs uppercase tracking-widest" style={{ color: '#334155' }}>Retrieving results...</span>
+                    <span className="mono text-xs uppercase tracking-widest text-text-muted">Retrieving results...</span>
                   </div>
                 </div>
               ) : detail ? (
                 <>
                   {/* Audit header card */}
-                  <div className="glass-card rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-5">
+                  <div className="surface-card p-5 flex flex-col md:flex-row md:items-center gap-5">
                     {/* Score ring */}
                     {detail.status === 'completed' && (
                       <div className="flex-shrink-0">
@@ -411,21 +395,21 @@ export default function Dashboard() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 flex-wrap mb-2">
-                        <h2 className="text-base font-bold truncate" style={{ color: '#e2e8f0', maxWidth: 300 }}>
+                        <h2 className="text-base font-bold truncate text-text-primary max-w-[300px]">
                           {detail.filename}
                         </h2>
                         <StatusBadge status={detail.status} />
                       </div>
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className="mono text-[10px]" style={{ color: '#1e293b' }}>
-                          ID: <span style={{ color: '#334155' }}>{detail.id.slice(0, 8)}</span>
+                        <span className="mono text-[10px] text-text-secondary">
+                          ID: <span className="text-text-muted">{detail.id.slice(0, 8)}</span>
                         </span>
-                        <span className="mono text-[10px]" style={{ color: '#1e293b' }}>
-                          Type: <span style={{ color: '#334155' }}>{detail.file_type.toUpperCase()}</span>
+                        <span className="mono text-[10px] text-text-secondary">
+                          Type: <span className="text-text-muted">{detail.file_type.toUpperCase()}</span>
                         </span>
                         {detail.completed_at && (
-                          <span className="mono text-[10px]" style={{ color: '#1e293b' }}>
-                            Completed: <span style={{ color: '#334155' }}>{new Date(detail.completed_at).toLocaleTimeString()}</span>
+                          <span className="mono text-[10px] text-text-secondary">
+                            Completed: <span className="text-text-muted">{new Date(detail.completed_at).toLocaleTimeString()}</span>
                           </span>
                         )}
                       </div>
@@ -435,8 +419,7 @@ export default function Dashboard() {
                         <div className="flex items-center gap-2 mt-3">
                           <button
                             onClick={() => handleRerun(detail.id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
-                            style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)', color: '#818cf8' }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all bg-accent-purple/10 border border-accent-purple/20 text-accent-purple hover:bg-accent-purple/20"
                           >
                             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
                               <path d="M1 1v4h4M11 11V7H7"/>
@@ -446,8 +429,7 @@ export default function Dashboard() {
                           </button>
                           <button
                             onClick={() => handleExport(detail.id, "json")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
-                            style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.12)', color: '#10b981' }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all bg-accent-emerald/10 border border-accent-emerald/20 text-accent-emerald hover:bg-accent-emerald/20"
                           >
                             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
                               <path d="M6 1v7M3 6l3 3 3-3M1 10h10"/>
@@ -456,8 +438,7 @@ export default function Dashboard() {
                           </button>
                           <button
                             onClick={() => handleExport(detail.id, "csv")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
-                            style={{ background: 'rgba(34,211,238,0.06)', border: '1px solid rgba(34,211,238,0.12)', color: '#22d3ee' }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan hover:bg-accent-cyan/20"
                           >
                             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
                               <path d="M6 1v7M3 6l3 3 3-3M1 10h10"/>
@@ -476,10 +457,10 @@ export default function Dashboard() {
                           if (cnt === 0) return null;
                           return (
                             <div key={sev} className="flex flex-col items-center justify-center px-3 py-2 rounded-xl" style={{
-                              background: `${color}0d`, border: `1px solid ${color}25`,
+                              background: `${color}15`, border: `1px solid ${color}30`,
                             }}>
                               <span className="text-lg font-black leading-none" style={{ color }}>{cnt}</span>
-                              <span className="mono text-[9px] uppercase mt-0.5" style={{ color: '#334155' }}>{sev}</span>
+                              <span className="mono text-[9px] uppercase mt-0.5 text-text-muted">{sev}</span>
                             </div>
                           );
                         })}
@@ -489,9 +470,9 @@ export default function Dashboard() {
 
                   {/* Violations + Code viewer */}
                   {detail.status === 'completed' && (
-                    <div className="grid grid-cols-12 gap-5" style={{ height: 600 }}>
+                    <div className="grid grid-cols-12 gap-5 h-[600px]">
                       {/* Violations list */}
-                      <div className="col-span-12 md:col-span-4 glass-card rounded-2xl p-4 overflow-hidden flex flex-col">
+                      <div className="col-span-12 md:col-span-4 surface-card p-4 overflow-hidden flex flex-col">
                         <ErrorBoundary fallbackMessage="Failed to render violations">
                           <ViolationsList violations={detail.violations} />
                         </ErrorBoundary>
@@ -511,39 +492,38 @@ export default function Dashboard() {
                   )}
 
                   {(detail.status === 'pending' || detail.status === 'processing') && (
-                    <div className="glass-card rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+                    <div className="surface-card p-12 flex flex-col items-center justify-center text-center">
                       <div className="relative w-16 h-16 mb-6">
                         <svg className="animate-spin absolute inset-0" width="64" height="64" viewBox="0 0 64 64" fill="none">
                           <circle cx="32" cy="32" r="27" stroke="rgba(99,102,241,0.1)" strokeWidth="3.5"/>
                           <path d="M32 5a27 27 0 0127 27" stroke="#6366f1" strokeWidth="3.5" strokeLinecap="round"/>
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: '#6366f1' }} />
+                          <div className="w-3 h-3 rounded-full animate-pulse bg-accent-purple" />
                         </div>
                       </div>
-                      <p className="text-sm font-bold mb-1.5" style={{ color: '#818cf8' }}>
+                      <p className="text-sm font-bold mb-1.5 text-accent-purple">
                         {detail.status === 'pending' ? 'Queued for analysis...' : 'Running compliance checks...'}
                       </p>
-                      <p className="text-xs" style={{ color: '#334155' }}>
+                      <p className="text-xs text-text-muted">
                         Results will appear automatically when complete
                       </p>
                     </div>
                   )}
 
                   {detail.status === 'failed' && (
-                    <div className="glass-card rounded-2xl p-12 flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.15)' }}>
+                    <div className="surface-card p-12 flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 bg-rose-500/10 border border-rose-500/20">
                         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#f43f5e" strokeWidth="1.75" strokeLinecap="round">
                           <path d="M14 9v5M14 19h.01"/>
                           <circle cx="14" cy="14" r="12"/>
                         </svg>
                       </div>
-                      <p className="text-sm font-bold mb-2" style={{ color: '#fb7185' }}>Analysis Failed</p>
-                      <p className="text-xs mb-4" style={{ color: '#334155' }}>The audit pipeline encountered an error processing this file.</p>
+                      <p className="text-sm font-bold mb-2 text-rose-500">Analysis Failed</p>
+                      <p className="text-xs mb-4 text-text-muted">The audit pipeline encountered an error processing this file.</p>
                       <button
                         onClick={() => handleRerun(detail.id)}
-                        className="px-4 py-1.5 rounded-lg text-xs font-medium"
-                        style={{ color: '#818cf8', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)' }}
+                        className="px-4 py-1.5 rounded-lg text-xs font-medium text-accent-purple bg-accent-purple/10 border border-accent-purple/20 hover:bg-accent-purple/20"
                       >
                         Retry Audit
                       </button>
@@ -552,19 +532,15 @@ export default function Dashboard() {
                 </>
               ) : (
                 /* Empty state */
-                <div className="flex flex-col items-center justify-center rounded-2xl text-center p-16" style={{
-                  height: 400,
-                  background: 'rgba(8,15,26,0.4)',
-                  border: '1.5px dashed rgba(255,255,255,0.05)',
-                }}>
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.1)' }}>
+                <div className="flex flex-col items-center justify-center rounded-2xl text-center p-16 h-[400px] bg-[#18181b] border-2 border-dashed border-[#27272a]">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 bg-accent-purple/10 border border-accent-purple/20">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 3L23 8v12L14 25L5 20V8L14 3z"/>
                       <path d="M14 10L19 13v6L14 22L9 19v-6L14 10z"/>
                     </svg>
                   </div>
-                  <p className="text-sm font-bold mb-2" style={{ color: '#475569' }}>No audit selected</p>
-                  <p className="text-xs leading-relaxed" style={{ color: '#1e293b' }}>
+                  <p className="text-sm font-bold mb-2 text-text-secondary">No audit selected</p>
+                  <p className="text-xs leading-relaxed text-text-muted">
                     Upload a Terraform or Kubernetes manifest<br />to begin compliance analysis
                   </p>
                 </div>
