@@ -73,40 +73,29 @@ export default function CodeViolationsViewer({ filename, rawContent, violations 
   const extColor = ext === 'TF' ? '#818cf8' : '#22d3ee';
 
   return (
-    <div className="flex flex-col rounded-2xl overflow-hidden" style={{
-      background: 'rgba(3,7,14,0.95)',
-      border: '1px solid rgba(255,255,255,0.06)',
-      height: '100%',
-    }}>
+    <div className="flex flex-col rounded-2xl overflow-hidden h-full bg-[#000000] border border-[#27272a]">
       {/* Editor header */}
-      <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0" style={{
-        background: 'rgba(5,10,18,0.9)',
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
-      }}>
+      <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0 bg-[#09090b] border-b border-[#27272a]">
         <div className="flex items-center gap-3">
           {/* Traffic lights */}
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full" style={{ background: 'rgba(244,63,94,0.6)' }} />
-            <div className="w-3 h-3 rounded-full" style={{ background: 'rgba(245,158,11,0.6)' }} />
-            <div className="w-3 h-3 rounded-full" style={{ background: 'rgba(16,185,129,0.6)' }} />
+            <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+            <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+            <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
           </div>
-          <span className="mono text-xs font-medium" style={{ color: '#64748b' }}>{filename}</span>
+          <span className="mono text-xs font-medium text-text-secondary">{filename}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="mono text-xs" style={{ color: '#1e293b' }}>{lines.length} lines</span>
-          <span className="mono text-[10px] px-2 py-0.5 rounded font-bold" style={{
-            background: `${extColor}12`,
+          <span className="mono text-xs text-text-muted">{lines.length} lines</span>
+          <span className="mono text-[10px] px-2 py-0.5 rounded font-bold border" style={{
+            background: `${extColor}15`,
             color: extColor,
-            border: `1px solid ${extColor}25`,
+            borderColor: `${extColor}30`,
           }}>
             {ext}
           </span>
           {violations.length > 0 && (
-            <span className="mono text-[10px] px-2 py-0.5 rounded font-bold" style={{
-              background: 'rgba(244,63,94,0.08)',
-              color: '#fb7185',
-              border: '1px solid rgba(244,63,94,0.2)',
-            }}>
+            <span className="mono text-[10px] px-2 py-0.5 rounded font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
               {violations.length} issues
             </span>
           )}
@@ -116,7 +105,7 @@ export default function CodeViolationsViewer({ filename, rawContent, violations 
       {/* Code area */}
       <div className="flex-1 overflow-auto">
         {lines.length === 0 ? (
-          <div className="flex items-center justify-center h-full" style={{ color: '#1e293b' }}>
+          <div className="flex items-center justify-center h-full text-text-muted">
             <span className="mono text-sm">No content</span>
           </div>
         ) : (
@@ -161,7 +150,7 @@ export default function CodeViolationsViewer({ filename, rawContent, violations 
                           background: `${c.bg}`,
                         }}>
                           <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full animate-pulse-glow" style={{ background: c.accent }} />
+                            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: c.accent }} />
                             <span className="mono text-xs font-semibold" style={{ color: c.text }}>
                               {v.policy_name}
                             </span>
@@ -179,27 +168,24 @@ export default function CodeViolationsViewer({ filename, rawContent, violations 
 
                         {/* Card body */}
                         <div className="px-4 py-3">
-                          <p className="text-xs leading-relaxed mb-3" style={{ color: '#94a3b8' }}>
+                          <p className="text-xs leading-relaxed mb-3 text-text-secondary">
                             {v.description}
                           </p>
-                          <div className="text-[10px] mb-3 mono" style={{ color: '#334155' }}>
-                            Resource: <span style={{ color: '#64748b' }}>{v.resource_id}</span>
+                          <div className="text-[10px] mb-3 mono text-text-muted">
+                            Resource: <span className="text-text-secondary">{v.resource_id}</span>
                           </div>
 
                           {/* Remediation */}
-                          <div className="rounded-xl overflow-hidden" style={{
-                            background: 'rgba(2,5,10,0.8)',
-                            border: '1px solid rgba(255,255,255,0.04)',
-                          }}>
-                            <div className="flex items-center gap-2 px-3 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                          <div className="rounded-xl overflow-hidden bg-[#09090b] border border-[#27272a]">
+                            <div className="flex items-center gap-2 px-3 py-2 border-b border-[#27272a]">
                               <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M1.5 5.5l2.5 2.5 5-5"/>
                               </svg>
-                              <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#10b981' }}>
+                              <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">
                                 Recommended Fix
                               </span>
                             </div>
-                            <pre className="px-3 py-3 mono text-[11px] leading-relaxed overflow-x-auto" style={{ color: '#64748b' }}>
+                            <pre className="px-3 py-3 mono text-[11px] leading-relaxed overflow-x-auto text-text-secondary">
                               {getRemediation(v.policy_name, v.resource_id)}
                             </pre>
                           </div>
