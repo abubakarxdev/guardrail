@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Shield-Dark.svg" alt="GuardRail Logo" width="80" />
   <h1 align="center">GuardRail</h1>
   <p align="center">
     <strong>A production-grade Static Analysis & Compliance Auditing platform for Cloud Infrastructure.</strong>
