@@ -9,34 +9,25 @@ module.exports = {
     extend: {
       colors: {
         dark: {
-          900: "#090B0F",
-          800: "#0F131A",
-          700: "#171D26",
-          600: "#222B38",
+          900: "#09090b",
+          800: "#18181b",
+          700: "#27272a",
+          600: "#3f3f46",
         },
         accent: {
-          cyan: "#00F0FF",
-          emerald: "#10B981",
-          rose: "#EF4444",
-          amber: "#F59E0B",
-          indigo: "#6366F1",
+          cyan: "#22d3ee",
+          emerald: "#10b981",
+          rose: "#f43f5e",
+          amber: "#f59e0b",
+          indigo: "#6366f1",
         }
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
       animation: {
-        "pulse-glow": "pulseGlow 2s infinite alternate",
-        "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+        "fade-in-up": "fadeInUp 0.3s ease-out forwards",
       },
       keyframes: {
-        pulseGlow: {
-          "0%": { boxShadow: "0 0 5px rgba(99, 102, 241, 0.2)" },
-          "100%": { boxShadow: "0 0 20px rgba(99, 102, 241, 0.6)" },
-        },
         fadeInUp: {
-          "0%": { opacity: 0, transform: "translateY(10px)" },
+          "0%": { opacity: 0, transform: "translateY(8px)" },
           "100%": { opacity: 1, transform: "translateY(0)" },
         }
       }
