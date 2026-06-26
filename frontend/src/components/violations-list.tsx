@@ -82,13 +82,13 @@ export default function ViolationsList({ violations, onSelectViolation }: Violat
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold" style={{ color: '#e2e8f0' }}>Violations</h3>
-          <span className="mono text-xs px-2 py-0.5 rounded-md font-semibold" style={{ background: 'rgba(255,255,255,0.05)', color: '#64748b' }}>
+          <h3 className="text-sm font-bold text-text-primary">Violations</h3>
+          <span className="mono text-xs px-2 py-0.5 rounded-md font-semibold bg-[#27272a] text-text-muted">
             {violations.length}
           </span>
         </div>
         {filter && (
-          <button onClick={() => setFilter(null)} className="text-xs" style={{ color: '#6366f1' }}>
+          <button onClick={() => setFilter(null)} className="text-xs text-accent-purple hover:text-white transition-colors">
             Clear filter
           </button>
         )}
@@ -107,8 +107,8 @@ export default function ViolationsList({ violations, onSelectViolation }: Violat
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
               style={{
                 background: active ? c.bg : 'transparent',
-                color: active ? c.color : '#334155',
-                border: `1px solid ${active ? c.border : 'rgba(255,255,255,0.05)'}`,
+                color: active ? c.color : 'var(--text-muted)',
+                border: `1px solid ${active ? c.border : 'var(--border-subtle)'}`,
               }}
             >
               {count} {sev}
@@ -121,16 +121,16 @@ export default function ViolationsList({ violations, onSelectViolation }: Violat
       <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
         {violations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-accent-emerald/10 border border-accent-emerald/20">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-accent-emerald">
                 <path d="M4 9l3 3 7-7"/>
               </svg>
             </div>
-            <p className="text-xs font-semibold mb-1" style={{ color: '#10b981' }}>All Clear</p>
-            <p className="text-xs" style={{ color: '#1e293b' }}>No policy violations detected</p>
+            <p className="text-xs font-semibold mb-1 text-accent-emerald">All Clear</p>
+            <p className="text-xs text-text-secondary">No policy violations detected</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-8 text-center text-xs" style={{ color: '#334155' }}>No {filter} violations found</div>
+          <div className="py-8 text-center text-xs text-text-muted">No {filter} violations found</div>
         ) : (
           filtered.map((v) => {
             const sev = v.severity.toLowerCase();
@@ -139,25 +139,21 @@ export default function ViolationsList({ violations, onSelectViolation }: Violat
               <div
                 key={v.id}
                 onClick={() => onSelectViolation?.(v.line_number)}
-                className="group p-3 rounded-xl cursor-pointer transition-all duration-200"
-                style={{
-                  background: 'rgba(8,15,26,0.6)',
-                  border: '1px solid rgba(255,255,255,0.04)',
-                }}
+                className="group p-3 rounded-xl cursor-pointer transition-all duration-200 bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46]"
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.borderColor = c.border;
-                  (e.currentTarget as HTMLElement).style.background = `${c.bg}`;
+                  (e.currentTarget as HTMLElement).style.background = c.bg;
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.04)';
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(8,15,26,0.6)';
+                  (e.currentTarget as HTMLElement).style.borderColor = '#27272a';
+                  (e.currentTarget as HTMLElement).style.background = '#18181b';
                 }}
               >
                 <div className="flex items-start gap-2.5">
                   <SeverityIcon severity={sev} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="mono text-[10px] font-semibold truncate" style={{ color: '#94a3b8' }}>
+                      <span className="mono text-[10px] font-semibold truncate text-text-secondary">
                         {v.policy_name}
                       </span>
                       <span className="mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded flex-shrink-0" style={{
@@ -166,17 +162,15 @@ export default function ViolationsList({ violations, onSelectViolation }: Violat
                         {sev}
                       </span>
                     </div>
-                    <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: '#475569' }}>
+                    <p className="text-[11px] leading-relaxed line-clamp-2 text-text-muted">
                       {v.description}
                     </p>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="mono text-[10px] truncate" style={{ color: '#1e293b' }}>
+                      <span className="mono text-[10px] truncate text-text-secondary">
                         {v.resource_id.split(':')[0]}
                       </span>
                       {v.line_number && (
-                        <span className="mono text-[10px] flex-shrink-0" style={{
-                          background: 'rgba(255,255,255,0.04)', color: '#334155', padding: '0 4px', borderRadius: 4
-                        }}>
+                        <span className="mono text-[10px] flex-shrink-0 bg-[#27272a] text-text-muted px-1 rounded-sm">
                           L{v.line_number}
                         </span>
                       )}
