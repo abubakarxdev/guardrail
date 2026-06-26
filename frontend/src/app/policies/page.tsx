@@ -54,7 +54,7 @@ export default function PoliciesPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div className="flex h-screen items-center justify-center bg-[#09090b]">
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-12 h-12">
             <svg className="animate-spin absolute inset-0" width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -62,7 +62,7 @@ export default function PoliciesPage() {
               <path d="M24 4a20 20 0 0120 20" stroke="#6366f1" strokeWidth="3" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="mono text-xs uppercase tracking-widest" style={{ color: '#334155' }}>Loading policies...</span>
+          <span className="mono text-xs uppercase tracking-widest text-text-muted">Loading policies...</span>
         </div>
       </div>
     );
@@ -93,19 +93,15 @@ export default function PoliciesPage() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+    <div className="flex h-screen overflow-hidden bg-[#09090b]">
       <Sidebar userEmail={user?.email} activeSection="rules" />
 
       <div className="flex-1 overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between" style={{
-          background: 'rgba(2,4,8,0.85)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.04)',
-        }}>
+        <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between bg-[#09090b]/90 backdrop-blur-md border-b border-[#27272a]">
           <div>
-            <h1 className="text-lg font-bold" style={{ color: '#e2e8f0' }}>Policy Rules Engine</h1>
-            <p className="text-xs mt-0.5" style={{ color: '#334155' }}>
+            <h1 className="text-lg font-bold text-text-primary">Policy Rules Engine</h1>
+            <p className="text-xs mt-0.5 text-text-muted">
               {policies.length} active security policies across Terraform &amp; Kubernetes
             </p>
           </div>
@@ -120,14 +116,14 @@ export default function PoliciesPage() {
                 <button
                   key={sev}
                   onClick={() => setFilterSeverity(filterSeverity === sev ? 'all' : sev)}
-                  className="stat-card rounded-2xl p-4 text-left transition-all"
+                  className="surface-card p-4 text-left transition-all hover:border-text-muted"
                   style={{
-                    border: filterSeverity === sev ? `1px solid ${c.border}` : undefined,
+                    border: filterSeverity === sev ? `1px solid ${c.color}` : undefined,
                   }}
                 >
-                  <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#334155' }}>{sev}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest mb-2 text-text-muted">{sev}</div>
                   <div className="text-2xl font-black" style={{ color: c.color }}>{severityCounts[sev]}</div>
-                  <div className="text-[10px] mt-0.5" style={{ color: '#1e293b' }}>policies</div>
+                  <div className="text-[10px] mt-0.5 text-text-muted/50">policies</div>
                 </button>
               );
             })}
@@ -137,7 +133,7 @@ export default function PoliciesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             {/* Search */}
             <div className="relative flex-1 min-w-[200px] max-w-sm">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#334155" strokeWidth="1.3" strokeLinecap="round">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#71717a" strokeWidth="1.3" strokeLinecap="round">
                 <circle cx="5.5" cy="5.5" r="4.5"/>
                 <path d="M9 9l3 3"/>
               </svg>
@@ -146,13 +142,7 @@ export default function PoliciesPage() {
                 placeholder="Search policies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl text-xs font-medium"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  color: '#e2e8f0',
-                  outline: 'none',
-                }}
+                className="w-full pl-9 pr-4 py-2 rounded-xl text-xs font-medium bg-[#18181b] border border-[#27272a] text-text-primary outline-none focus:border-accent-purple/50"
               />
             </div>
 
@@ -167,9 +157,9 @@ export default function PoliciesPage() {
                   onClick={() => setFilterFramework(fw)}
                   className="px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
                   style={{
-                    background: isActive ? `${color}15` : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${isActive ? `${color}30` : 'rgba(255,255,255,0.05)'}`,
-                    color: isActive ? color : '#475569',
+                    background: isActive ? `${color}15` : '#18181b',
+                    border: `1px solid ${isActive ? `${color}30` : '#27272a'}`,
+                    color: isActive ? color : '#a1a1aa',
                   }}
                 >
                   {label}
@@ -180,15 +170,15 @@ export default function PoliciesPage() {
 
           {/* Policy cards grouped by category */}
           {Object.keys(grouped).length === 0 ? (
-            <div className="py-16 text-center text-sm" style={{ color: '#334155' }}>
+            <div className="py-16 text-center text-sm text-text-muted">
               No policies match your filters
             </div>
           ) : (
             Object.entries(grouped).map(([category, rules]) => (
               <div key={category}>
                 <div className="flex items-center gap-2 mb-3">
-                  <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: '#475569' }}>{category}</h3>
-                  <span className="mono text-[9px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.04)', color: '#334155' }}>{rules.length}</span>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary">{category}</h3>
+                  <span className="mono text-[9px] px-1.5 py-0.5 rounded bg-[#18181b] text-text-muted border border-[#27272a]">{rules.length}</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                   {rules.map(rule => {
@@ -197,11 +187,11 @@ export default function PoliciesPage() {
                     return (
                       <div
                         key={rule.id}
-                        className="glass-card rounded-2xl p-5 transition-all hover:border-opacity-40"
+                        className="surface-card p-5 transition-all hover:border-[#3f3f46]"
                         style={{ borderLeft: `3px solid ${sevConf.color}` }}
                       >
                         <div className="flex items-start justify-between gap-3 mb-3">
-                          <h4 className="text-sm font-bold" style={{ color: '#e2e8f0' }}>{rule.name}</h4>
+                          <h4 className="text-sm font-bold text-text-primary">{rule.name}</h4>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             <span className="mono text-[9px] font-bold uppercase px-2 py-0.5 rounded-md" style={{
                               background: sevConf.bg, color: sevConf.color, border: `1px solid ${sevConf.border}`,
@@ -215,11 +205,11 @@ export default function PoliciesPage() {
                             </span>
                           </div>
                         </div>
-                        <p className="text-xs leading-relaxed mb-3" style={{ color: '#64748b' }}>
+                        <p className="text-xs leading-relaxed mb-3 text-text-secondary">
                           {rule.description}
                         </p>
-                        <div className="mono text-[10px]" style={{ color: '#1e293b' }}>
-                          Policy ID: <span style={{ color: '#334155' }}>{rule.id}</span>
+                        <div className="mono text-[10px] text-text-muted">
+                          Policy ID: <span className="text-text-secondary">{rule.id}</span>
                         </div>
                       </div>
                     );
