@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, status, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -12,6 +12,7 @@ router = APIRouter(prefix="/audits", tags=["audits"])
 
 @router.post("/upload", response_model=AuditResponse, status_code=status.HTTP_201_CREATED)
 async def upload_config(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -54,7 +55,7 @@ async def upload_config(
     db.refresh(audit)
 
     # Trigger Celery background task
-    run_audit_pipeline.delay(audit.id)
+    background_tasks.add_task(run_audit_pipeline, audit.id)
 
     return audit
 
@@ -110,6 +111,7 @@ def delete_audit(
 @router.post("/{audit_id}/rerun", response_model=AuditResponse)
 def rerun_audit(
     audit_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -130,7 +132,7 @@ def rerun_audit(
     db.commit()
     db.refresh(audit)
 
-    # Re-dispatch Celery task
-    run_audit_pipeline.delay(audit.id)
+    # Re-dispatch background task
+    background_tasks.add_task(run_audit_pipeline, audit.id)
 
     return audit
