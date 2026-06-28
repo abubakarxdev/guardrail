@@ -102,21 +102,21 @@ export default function Sidebar({ userEmail = "", activeSection = "dashboard" }:
           </span>
         </div>
 
-        <button className="sidebar-link">
+        <button className="sidebar-link" onClick={() => router.push('/docs')}>
           <span className="opacity-60">
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v11h9V5.5L8.5 2H3z"/><path d="M8.5 2v3.5H12"/></svg>
           </span>
           Documentation
         </button>
 
-        <button className="sidebar-link">
+        <button className="sidebar-link" onClick={() => router.push('/changelog')}>
           <span className="opacity-60 text-accent-cyan">
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M7.5 4v4l2 2"/></svg>
           </span>
           Changelog
         </button>
 
-        <button className="sidebar-link">
+        <button className={`sidebar-link ${activeSection === 'support' ? 'active' : ''}`} onClick={() => router.push('/support')}>
           <span className="opacity-60">
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 13l2.5-2.5A6.5 6.5 0 117.5 14a6.4 6.4 0 01-3.5-1z"/></svg>
           </span>
