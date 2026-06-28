@@ -18,6 +18,12 @@ export default function Login() {
   useEffect(() => {
     setMounted(true);
     if (api.getToken()) router.push("/dashboard");
+    
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mode") === "register") {
+      setMode("register");
+    }
+
     const sessionErr = sessionStorage.getItem("auth_error");
     if (sessionErr) {
       setError(sessionErr);
