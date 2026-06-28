@@ -16,24 +16,28 @@ With a beautiful, responsive dashboard and a robust FastAPI backend, GuardRail i
 - **Automated IaC Auditing:** Upload `.tf` or `.yaml` files and instantly receive a comprehensive A-F security grade.
 - **Line-Level Violation Viewer:** An interactive code viewer that highlights exact lines causing security violations.
 - **Secure Authentication:** Full JWT-based authentication system with secure password resets powered by [Resend](https://resend.com).
-- **Asynchronous Processing:** Heavy file parsing and auditing algorithms are offloaded to Celery workers backed by Redis.
-- **Modern UI/UX:** A stunning, dark-mode first interface built with Next.js, featuring micro-animations, glassmorphism, and a premium aesthetic.
+- **Dual-Email Support System:** Built-in interactive support ticketing system that automatically dispatches confirmation emails to users and detailed inquiries to admin inboxes via the Resend API.
+- **Modern UI/UX ("Linear-Style"):** A stunning, dark-mode first interface built with Next.js, featuring micro-animations, glassmorphism, dynamic radial gradients, and a premium aesthetic using `framer-motion`.
+- **Dynamic Public Pages:** Includes beautifully crafted Marketing Pages (Bento-box features grid, Markdown-styled Documentation, Vertical Timeline Changelog, and an interactive CLI simulation on the landing page).
+- **Asynchronous Processing:** Heavy file parsing and auditing algorithms are offloaded to FastAPI BackgroundTasks for non-blocking execution.
 
 ## 🏗️ Architecture
 
-GuardRail is built with a modern, decoupled architecture:
+GuardRail is built with a modern, decoupled architecture designed for deployment on edge and serverless platforms.
 
-### Frontend
-- **Framework:** Next.js 14 (App Router)
-- **Styling:** Vanilla CSS & Tailwind CSS for utility classes
-- **Key Components:** Interactive dashboard, real-time file upload zone, line-highlighting code viewer
+### Frontend (Next.js 14 App Router)
+- **Framework:** Next.js 14 (React)
+- **Styling:** Tailwind CSS & Vanilla CSS for advanced glassmorphism
+- **Animations:** Framer Motion (optimized for Static Site Generation)
+- **Key Components:** Interactive dashboard, real-time file upload zone, line-highlighting code viewer, responsive sidebar navigation.
 
-### Backend
-- **Framework:** FastAPI (Python)
-- **Database:** PostgreSQL via SQLAlchemy ORM
-- **Task Queue:** Celery + Redis for asynchronous audit processing
-- **Email Delivery:** Resend Python SDK
+### Backend (FastAPI)
+- **Framework:** FastAPI (Python 3.10+)
+- **Database:** PostgreSQL via SQLAlchemy ORM (Hosted on Neon Serverless Postgres)
+- **Task Queue:** Built-in FastAPI BackgroundTasks for asynchronous audit processing
+- **Email Delivery:** Resend Python SDK for transactional emails and support ticketing
 - **Parsers:** `python-hcl2` for Terraform and `pyyaml` for Kubernetes
+- **Deployment:** Render (Live at `https://guardrail-api-92m6.onrender.com/`)
 
 ---
 
@@ -43,7 +47,6 @@ GuardRail is built with a modern, decoupled architecture:
 - Python 3.10+
 - Node.js 18+
 - PostgreSQL
-- Redis Server (Running on `localhost:6379`)
 
 ### 1. Backend Setup
 Navigate to the backend directory and set up your virtual environment:
@@ -58,22 +61,24 @@ pip install -r requirements.txt
 **Environment Variables:**
 Create a `.env` file in the `backend/` directory:
 ```env
+# Database (Neon Serverless Postgres / Local)
 DATABASE_URL=postgresql://user:password@localhost:5432/guardrail_db
-REDIS_URL=redis://localhost:6379/0
+
+# JWT Auth
 SECRET_KEY=your_super_secret_key
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Resend Email API
 RESEND_API_KEY=re_your_api_key_here
 SENDER_EMAIL=onboarding@resend.dev
+ADMIN_EMAIL=admin@yourdomain.com
 ```
 
 **Run Database Migrations & Start Servers:**
 ```bash
 # Start the FastAPI Server
 uvicorn app.main:app --reload --port 8000
-
-# In a separate terminal, start the Celery Worker
-celery -A app.tasks.worker worker --loglevel=info --pool=solo
 ```
 
 ### 2. Frontend Setup
@@ -92,10 +97,20 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 **Start the Development Server:**
 ```bash
+# Clear cache if experiencing Framer Motion type errors
+rm -rf .next 
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+---
+
+## 🚀 Production Deployment
+
+1. **Database:** Deploy your PostgreSQL database on [Neon](https://neon.tech/) and grab the connection string.
+2. **Backend:** Deploy the FastAPI backend on [Render](https://render.com) using a Web Service. Ensure you set all the Environment variables (`DATABASE_URL`, `RESEND_API_KEY`, etc.) in the Render dashboard.
+3. **Frontend:** Deploy the Next.js frontend to Render or Vercel. Be sure to clear the `.next` cache before building to prevent Static Generation issues with `framer-motion` variants. Set `NEXT_PUBLIC_API_URL` to your live Render backend URL.
 
 ---
 
