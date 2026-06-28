@@ -3,16 +3,36 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { api } from "@/lib/api";
 
 export default function Home() {
   const router = useRouter();
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     api.getMe().then(() => setAuthed(true)).catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 } 
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#09090b]">
@@ -23,10 +43,9 @@ export default function Home() {
 
       {/* Navigation */}
       <header className="relative z-20 flex items-center justify-between px-8 py-5 border-b border-[#27272a]">
-        <div className="flex items-center gap-3">
-          {/* Logo mark */}
+        <Link href="/" className="flex items-center gap-3 group">
           <div className="relative">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-purple shadow-[0_0_12px_rgba(99,102,241,0.2)]">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-purple shadow-[0_0_12px_rgba(99,102,241,0.2)] group-hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
                 <path d="M8 5L11 6.75V10.25L8 12L5 10.25V6.75L8 5Z" fill="white" opacity="0.8"/>
@@ -36,25 +55,31 @@ export default function Home() {
           <span className="text-sm font-bold tracking-widest uppercase text-text-primary">
             Guard<span className="text-accent-purple">Rail</span>
           </span>
-        </div>
+        </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-2">
           {['Features', 'Docs', 'Changelog'].map(item => (
-            <button key={item} className="btn-ghost px-4 py-2 rounded-lg text-sm">{item}</button>
+            <Link 
+              key={item} 
+              href={`/${item.toLowerCase()}`} 
+              className="btn-ghost px-4 py-2 rounded-lg text-sm hover:scale-105"
+            >
+              {item}
+            </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
           {!loading && (
             authed ? (
-              <Link href="/dashboard" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-flex items-center gap-2">
+              <Link href="/dashboard" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform">
                 Open Dashboard
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </Link>
             ) : (
               <>
-                <Link href="/login" className="btn-ghost px-5 py-2.5 rounded-xl text-sm">Sign In</Link>
-                <Link href="/login" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-flex items-center gap-2">
+                <Link href="/login" className="btn-ghost px-5 py-2.5 rounded-xl text-sm hover:scale-105">Sign In</Link>
+                <Link href="/login?mode=register" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform">
                   Get Started
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </Link>
@@ -65,38 +90,45 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-24 pb-16">
-        <div className="animate-fade-up" style={{ animationFillMode: 'both' }}>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-emerald/20 bg-accent-emerald/10 text-accent-emerald text-xs font-semibold mb-8 mx-auto w-fit">
+      <motion.main 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-24 pb-16"
+      >
+        <motion.div variants={itemVariants}>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-emerald/20 bg-accent-emerald/10 text-accent-emerald text-xs font-semibold mb-8 mx-auto w-fit shadow-[0_0_20px_rgba(16,185,129,0.15)]">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-emerald animate-pulse" />
             Cloud Security Intelligence Platform
           </div>
-        </div>
+        </motion.div>
 
-        <h1 className="animate-fade-up delay-100 max-w-4xl mx-auto mb-6 font-black leading-[1.05] tracking-tight text-text-primary" style={{ fontSize: 'clamp(42px, 7vw, 80px)', animationFillMode: 'both' }}>
+        <motion.h1 variants={itemVariants} className="max-w-4xl mx-auto mb-6 font-black leading-[1.05] tracking-tight text-text-primary" style={{ fontSize: 'clamp(42px, 7vw, 80px)' }}>
           Enforce Security
           <br />
           <span className="gradient-text-purple-cyan">Before Deployment</span>
-        </h1>
+        </motion.h1>
 
-        <p className="animate-fade-up delay-200 max-w-xl mx-auto mb-12 text-lg leading-relaxed text-text-muted" style={{ animationFillMode: 'both' }}>
+        <motion.p variants={itemVariants} className="max-w-xl mx-auto mb-12 text-lg leading-relaxed text-text-muted">
           Audit Terraform and Kubernetes manifests for critical security misconfigurations. GuardRail catches compliance failures instantly — before they reach production.
-        </p>
+        </motion.p>
 
-        <div className="animate-fade-up delay-300 flex flex-col sm:flex-row gap-4 justify-center items-center mb-20" style={{ animationFillMode: 'both' }}>
-          <Link href={authed ? "/dashboard" : "/login"} className="btn-primary px-8 py-4 rounded-xl text-base font-semibold inline-flex items-center gap-2.5">
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
+          <Link href={authed ? "/dashboard" : "/login?mode=register"} className="btn-primary px-8 py-4 rounded-xl text-base font-semibold inline-flex items-center gap-2.5 hover:scale-105 transition-transform shadow-[0_0_30px_rgba(99,102,241,0.3)]">
             Start Auditing Free
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
-          <button className="btn-ghost px-8 py-4 rounded-xl text-base font-semibold inline-flex items-center gap-2.5">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z"/><path d="M6.271 5.055a.5.5 0 01.52.038l3.5 2.5a.5.5 0 010 .814l-3.5 2.5A.5.5 0 016 10.5v-5a.5.5 0 01.271-.445z"/></svg>
+          <button onClick={() => setIsVideoModalOpen(true)} className="btn-ghost px-8 py-4 rounded-xl text-base font-semibold inline-flex items-center gap-2.5 hover:scale-105 transition-transform group">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" className="text-text-primary ml-0.5"><path d="M4 2v12l9-6-9-6z"/></svg>
+            </div>
             Watch Demo
           </button>
-        </div>
+        </motion.div>
 
         {/* Terminal preview block */}
-        <div className="animate-fade-up delay-400 w-full max-w-2xl mx-auto mb-24" style={{ animationFillMode: 'both' }}>
-          <div className="surface-card overflow-hidden">
+        <motion.div variants={itemVariants} className="w-full max-w-2xl mx-auto mb-24">
+          <div className="surface-card overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[#27272a]/50">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-[#27272a] bg-[#18181b]">
               <div className="w-3 h-3 rounded-full bg-accent-rose" />
               <div className="w-3 h-3 rounded-full bg-accent-amber" />
@@ -129,7 +161,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Feature Cards */}
         <div id="features" className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
@@ -174,8 +206,16 @@ export default function Home() {
               desc: 'Browse violations highlighted line-by-line in the raw source code — with embedded remediation advice and exact fix recommendations.',
             },
           ].map((card, i) => (
-            <div key={i} className="surface-card p-8 text-left animate-fade-up" style={{ animationDelay: `${0.1 * i + 0.5}s`, animationFillMode: 'both' }}>
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border ${card.bgClass}`}>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              whileHover={{ y: -5 }}
+              className="surface-card p-8 text-left hover:border-[#52525b] group cursor-default"
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border ${card.bgClass} group-hover:scale-110 transition-transform duration-300`}>
                 {card.icon}
               </div>
               <div className={`mono text-xs mb-3 font-medium tracking-widest uppercase ${card.color}`}>
@@ -183,12 +223,18 @@ export default function Home() {
               </div>
               <h3 className="text-lg font-bold mb-3 text-text-primary">{card.title}</h3>
               <p className="text-sm leading-relaxed text-text-secondary">{card.desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Stats strip */}
-        <div className="w-full max-w-5xl mx-auto surface-card p-8 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-5xl mx-auto surface-card p-8 mb-16"
+        >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { num: '12+', label: 'Compliance Rules' },
@@ -197,16 +243,16 @@ export default function Home() {
               { num: '100%', label: 'Static Analysis' },
             ].map((s, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl font-black mb-1 gradient-text-purple-cyan">{s.num}</div>
+                <div className="text-4xl font-black mb-2 gradient-text-purple-cyan">{s.num}</div>
                 <div className="text-xs uppercase tracking-widest font-semibold text-text-muted">{s.label}</div>
               </div>
             ))}
           </div>
-        </div>
-      </main>
+        </motion.div>
+      </motion.main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-[#27272a] px-8 py-6 flex items-center justify-between">
+      <footer className="relative z-10 border-t border-[#27272a] px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 bg-[#09090b]">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md flex items-center justify-center bg-accent-purple">
             <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
@@ -215,8 +261,106 @@ export default function Home() {
           </div>
           <span className="text-xs font-semibold tracking-wider text-text-secondary">GUARDRAIL</span>
         </div>
-        <span className="text-xs text-text-muted">© 2026 GuardRail. Cloud Infrastructure Compliance.</span>
+        <div className="flex gap-4">
+          <Link href="/features" className="text-xs text-text-muted hover:text-text-primary transition-colors">Features</Link>
+          <Link href="/docs" className="text-xs text-text-muted hover:text-text-primary transition-colors">Documentation</Link>
+          <Link href="/changelog" className="text-xs text-text-muted hover:text-text-primary transition-colors">Changelog</Link>
+        </div>
+        <span className="text-xs text-text-muted">© 2026 GuardRail. All rights reserved.</span>
       </footer>
+
+      {/* Video Modal */}
+      <AnimatePresence>
+        {isVideoModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsVideoModalOpen(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-4xl aspect-video bg-[#09090b] rounded-2xl border border-[#27272a] shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setIsVideoModalOpen(false)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+              <div className="absolute inset-0 flex flex-col bg-[#09090b] text-left p-6 font-mono text-sm overflow-hidden">
+                {/* Fake terminal header */}
+                <div className="flex items-center gap-2 pb-4 mb-4 border-b border-[#27272a]">
+                  <div className="w-3 h-3 rounded-full bg-accent-rose" />
+                  <div className="w-3 h-3 rounded-full bg-accent-amber" />
+                  <div className="w-3 h-3 rounded-full bg-accent-emerald" />
+                  <span className="text-text-muted text-xs ml-2">guardrail-cli — bash</span>
+                </div>
+
+                <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                    <span className="text-text-secondary">$</span> <span className="text-accent-purple">guardrail audit</span> <span className="text-text-primary">production-infra/</span>
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
+                    <span className="text-text-muted">⠋ Analyzing Terraform state...</span>
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }} className="text-accent-cyan">
+                    ✓ Found 24 configuration files
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.2 }} className="text-accent-cyan">
+                    ✓ Evaluated 142 compliance policies
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ delay: 4.0 }} className="mt-4 border-l-2 border-accent-rose pl-4 py-2 bg-accent-rose/5 rounded-r">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="bg-accent-rose text-white text-xs px-1.5 py-0.5 rounded font-bold">CRITICAL</span>
+                      <span className="text-text-primary font-bold">Public S3 Bucket Detected</span>
+                    </div>
+                    <div className="text-text-muted text-xs mb-2">production-infra/storage.tf:L45</div>
+                    <div className="text-text-secondary bg-[#18181b] p-3 rounded text-xs border border-[#27272a]">
+                      <div><span className="text-accent-rose">- acl = "public-read"</span></div>
+                      <div><span className="text-accent-emerald">+ acl = "private"</span></div>
+                    </div>
+                  </motion.div>
+                  
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ delay: 5.5 }} className="mt-2 border-l-2 border-orange-500 pl-4 py-2 bg-orange-500/5 rounded-r">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded font-bold">HIGH</span>
+                      <span className="text-text-primary font-bold">RDS Instance Missing Encryption</span>
+                    </div>
+                    <div className="text-text-muted text-xs">production-infra/database.tf:L112</div>
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 7.0 }} className="mt-6 pt-4 border-t border-[#27272a] flex items-center justify-between">
+                    <div>
+                      <span className="text-text-muted">Scan complete in </span><span className="text-text-primary">1.24s</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-text-muted">Posture Score:</span>
+                      <span className="text-accent-rose font-bold text-lg">72/100</span>
+                    </div>
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 8.5 }} className="mt-8 text-center flex justify-center">
+                    <Link href="/login?mode=register" className="inline-flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105">
+                      Try it on your infrastructure
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </Link>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
