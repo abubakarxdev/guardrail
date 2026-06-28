@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     # Resend
     RESEND_API_KEY: Optional[str] = None
     SENDER_EMAIL: str = "onboarding@resend.dev"
+    ADMIN_EMAIL: str = "abubakarxdev@gmail.com"
 
     class Config:
         env_file = ".env"
