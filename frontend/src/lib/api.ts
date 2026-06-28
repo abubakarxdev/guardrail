@@ -197,5 +197,13 @@ export const api = {
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" }
     });
+  },
+
+  submitSupportTicket(subject: string, message: string) {
+    return this.request("/support/ticket", {
+      method: "POST",
+      body: JSON.stringify({ subject, message }),
+      headers: { "Content-Type": "application/json" }
+    });
   }
 };
