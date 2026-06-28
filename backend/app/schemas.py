@@ -135,3 +135,11 @@ class PolicyRuleResponse(BaseModel):
     severity: str
     framework: str  # 'terraform' or 'kubernetes'
     category: str
+
+    class Config:
+        from_attributes = True
+
+# Support ticket schema
+class SupportTicketCreate(BaseModel):
+    subject: str
+    message: str
